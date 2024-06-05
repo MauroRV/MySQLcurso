@@ -1,0 +1,65 @@
+CREATE SCHEMA MySQL_curso;
+USE MySQL_curso;
+
+DROP TABLE IF EXISTS sucursales;
+
+create table sucursales(
+id INT AUTO_INCREMENT NOT NULL,
+provincia varchar(15),
+direccion varchar(30),
+primary key (id)
+);
+
+DROP TABLE IF EXISTS empelados;
+
+create table empleados(
+id INT AUTO_INCREMENT NOT NULL,
+nombre varchar(15) NOT NULL,
+apellido varchar(15) NOT NULL, 
+edad INT,
+correo varchar(20),
+telefono varchar(20),
+id_sucursal int,
+primary key (id),
+foreign key (id_sucursal) references sucursales(id)
+);
+
+DROP TABLE IF EXISTS productos;
+
+create table productos(
+id INT AUTO_INCREMENT NOT NULL,
+tipo varchar(15),
+producto varchar(25),
+nombre varchar(25),
+precio float,
+primary key(id)
+);
+
+DROP TABLE IF EXISTS clientes;
+
+create table clientes(
+id INT AUTO_INCREMENT NOT NULL,
+nombre varchar(15) NOT NULL,
+apellido varchar(15) NOT NULL,
+edad int,
+correo varchar(20),
+telefono varchar(15),
+primary key (id)
+);
+
+DROP TABLE IF EXISTS ventas;
+
+create table ventas(
+id INT AUTO_INCREMENT NOT NULL,
+fecha DATE,
+id_empleado INT,
+id_cliente INT,
+Id_sucursal INT,
+id_producto INT,
+total FLOAT,
+PRIMARY KEY (id),
+FOREIGN KEY (id_cliente) REFERENCES clientes(id), 
+FOREIGN KEY (id_empleado) REFERENCES empleados(id),
+FOREIGN KEY (id_sucursal) REFERENCES sucursales(id),
+FOREIGN KEY (id_producto) REFERENCES productos(id)
+);
