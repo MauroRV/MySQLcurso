@@ -63,3 +63,50 @@ FOREIGN KEY (id_empleado) REFERENCES empleados(id),
 FOREIGN KEY (id_sucursal) REFERENCES sucursales(id),
 FOREIGN KEY (id_producto) REFERENCES productos(id)
 );
+
+INSERT INTO sucursales (provincia, direccion) VALUES
+('Corrientes', 'Av. 3 de Abril 1234'),
+('Corrientes', 'Junin 1484')
+('Chaco', 'Frondizi 567'),
+('Misiones', 'Av. Alvear 789'),
+('Formosa', 'Corrientes 1707');
+
+INSERT INTO empleados (nombre, apellido, edad, correo, telefono, id_sucursal) VALUES
+('Juan Manuel', 'Espinola', 'jmespinola94@gmail.com', 1),
+('Ariel', 'Fernandez', 'ariel.fernandez@gmail.com', 1),
+('Jose Manuel', 'Huici', 'cotecho.huici@gmail.com', 1),
+('Mariano Andes', 'Valdez Ramirez', 'marian.valdezr91@gmail.com', 1),
+('Celeste', 'Bernachea', 'celeste.bernachea@gmail.com', 2),
+('Amalia', 'Ocampo', 'amalia.ocampo@gmail.com', 2),
+('Carla', 'Acosta Maidana', 'carli_maidana@gmail.com', 2),
+('Ivan ', 'Urinowski', 'ivanurinowski931@gmail.com', 2),
+('Malena', 'Rivero', 'malena.rivero@gmail.com', 3),
+('Carla', 'Cornalo', 'carla.cornalo@gmail.com', 3),
+('Nahuel', 'Acosta', 'n_acosta15@gmail.com', 3),
+('Pilar', 'Stuz', 'pilar.stuz@gmail.com', 3),
+('Juan Martin', 'Brown', 'tinchobrown98@gmail.com', 4),
+('Juan Cruz', 'Chiruzy', 'JCchiruzy15@gmail.com', 4),
+('Gonzalo', 'Rodriguez', 'gonzalo.rodriguez@gmail.com', 4),
+('Constanza', 'Ramirez', 'constanza.ramirez@gmail.com', 4),
+('Nicolas', 'Valentinotti', 'nicolas.valentinotti@gmail.com', 5),
+('Guadalupe', 'Cassarino', 'guadalupe.cassarino@gmail.com', 5),
+('Juan Cruz', 'Gonzalez', 'mono.gonzalez@gmail.com', 5),
+('Aymara', 'Seoane', 'aymara.seoane@gmail.com', 5),
+
+-- Insertar datos en productos
+INSERT INTO productos (tipo, producto, nombre, precio) VALUES
+('Bebida', 'Refresco', 'Coca Cola', 1.5),
+('Comida', 'Snack', 'Papitas', 2.0),
+('Bebida', 'Cerveza', 'Heineken', 2.5);
+
+-- Insertar datos en clientes
+INSERT INTO clientes (nombre, apellido, edad, correo, telefono) VALUES
+('Ana', 'Martínez', 28, 'ana.martinez@example.com', '321654987'),
+('Luis', 'Rodríguez', 35, 'luis.rodriguez@example.com', '654987321'),
+('Sofía', 'López', 22, 'sofia.lopez@example.com', '789321654');
+
+-- Insertar datos en ventas
+INSERT INTO ventas (fecha, id_empleado, id_cliente, id_sucursal, id_producto, total) VALUES
+('2024-07-01', 1, 1, 1, 1, 1.5),
+('2024-07-02', 2, 2, 2, 2, 2.0),
+('2024-07-03', 3, 3, 3, 3, 2.5);
