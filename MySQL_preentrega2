@@ -1,65 +1,87 @@
-DROP SCHEMA IF EXISTS MySQL_curso;
-
-CREATE SCHEMA MySQL_curso;
-USE MySQL_curso;
+DROP SCHEMA IF EXISTS Niza;
+CREATE SCHEMA Niza;
+USE Niza;
 
 DROP TABLE IF EXISTS sucursales;
-DROP TABLE IF EXISTS empelados;
+DROP TABLE IF EXISTS empleados;
 DROP TABLE IF EXISTS productos;
 DROP TABLE IF EXISTS clientes;
 DROP TABLE IF EXISTS ventas;
+DROP TABLE IF EXISTS stock_productos;
+DROP TABLE IF EXISTS registro_carga_ventas;
+DROP TABLE IF EXISTS ultima_fecha_venta_empleados;
 
-create table sucursales(
-id INT AUTO_INCREMENT NOT NULL,
-provincia varchar(20),
-direccion varchar(40),
-primary key (id)
+CREATE TABLE sucursales (
+    id INT AUTO_INCREMENT NOT NULL,
+    provincia VARCHAR(20),
+    direccion VARCHAR(40),
+    PRIMARY KEY (id)
 );
 
-create table empleados(
-id INT AUTO_INCREMENT NOT NULL,
-nombre varchar(20) NOT NULL,
-apellido varchar(20) NOT NULL, 
-edad INT,
-correo varchar(35),
-telefono varchar(25),
-id_sucursal int,
-primary key (id),
-foreign key (id_sucursal) references sucursales(id)
+CREATE TABLE empleados (
+    id INT AUTO_INCREMENT NOT NULL,
+    nombre VARCHAR(20) NOT NULL,
+    apellido VARCHAR(20) NOT NULL,
+    edad INT,
+    correo VARCHAR(35),
+    telefono VARCHAR(25),
+    id_sucursal INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_sucursal) REFERENCES sucursales(id)
 );
 
-create table productos(
-id INT AUTO_INCREMENT NOT NULL,
-tipo varchar(25),
-producto varchar(30),
-nombre varchar(20),
-precio float,
-primary key(id)
+CREATE TABLE productos (
+    id INT AUTO_INCREMENT NOT NULL,
+    tipo VARCHAR(25),
+    producto VARCHAR(30),
+    nombre VARCHAR(20),
+    precio FLOAT,
+    PRIMARY KEY (id)
 );
 
-create table clientes(
-id INT AUTO_INCREMENT NOT NULL,
-nombre varchar(20) NOT NULL,
-apellido varchar(20) NOT NULL,
-edad int,
-correo varchar(30),
-telefono varchar(20),
-primary key (id)
+CREATE TABLE clientes (
+    id INT AUTO_INCREMENT NOT NULL,
+    nombre VARCHAR(20) NOT NULL,
+    apellido VARCHAR(20) NOT NULL,
+    edad INT,
+    correo VARCHAR(30),
+    telefono VARCHAR(20),
+    PRIMARY KEY (id)
 );
 
-create table ventas(
-id INT AUTO_INCREMENT NOT NULL,
-fecha DATE,
-id_empleado INT,
-id_cliente INT,
-Id_sucursal INT,
-id_producto INT,
-total FLOAT,
-PRIMARY KEY (id),
-FOREIGN KEY (id_cliente) REFERENCES clientes(id), 
-FOREIGN KEY (id_empleado) REFERENCES empleados(id),
-FOREIGN KEY (id_sucursal) REFERENCES sucursales(id),
-FOREIGN KEY (id_producto) REFERENCES productos(id)
+CREATE TABLE ventas (
+    id INT AUTO_INCREMENT NOT NULL,
+    fecha DATE,
+    id_empleado INT,
+    id_cliente INT,
+    id_sucursal INT,
+    id_producto INT,
+    total FLOAT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id),
+    FOREIGN KEY (id_empleado) REFERENCES empleados(id),
+    FOREIGN KEY (id_sucursal) REFERENCES sucursales(id),
+    FOREIGN KEY (id_producto) REFERENCES productos(id)
+);
+
+CREATE TABLE stock_productos (
+    id_producto INT PRIMARY KEY,
+    stock INT,
+    FOREIGN KEY (id_producto) REFERENCES productos(id)
+);
+
+CREATE TABLE registro_carga_ventas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha_hora DATETIME NOT NULL,
+    id_usuario INT NOT NULL,
+    id_venta INT NOT NULL,
+    FOREIGN KEY (id_venta) REFERENCES ventas(id)
+);
+
+CREATE TABLE ultima_fecha_venta_empleados (
+    id_empleado INT PRIMARY KEY,
+    ultima_fecha_venta DATE,
+    FOREIGN KEY (id_empleado) REFERENCES empleados(id)
 );
 
 INSERT INTO sucursales (provincia, direccion) VALUES
@@ -196,6 +218,91 @@ INSERT INTO ventas (fecha, id_empleado, id_cliente, id_sucursal, id_producto, to
 ('2024-08-07', 17, 2, 2, 17, 1000), 
 ('2024-08-08', 6, 5, 2, 7, 1300);
 
+INSERT INTO stock_productos (id_producto, stock) VALUES
+(1, 50),
+(2, 45),
+(3, 30),
+(4, 35),
+(5, 40),
+(6, 20),
+(7, 25),
+(8, 15),
+(9, 10),
+(10, 50),
+(11, 55),
+(12, 60),
+(13, 20),
+(14, 30),
+(15, 25),
+(16, 40),
+(17, 35),
+(18, 20),
+(19, 30),
+(20, 45),
+(21, 50),
+(22, 60),
+(23, 55),
+(24, 65);
+
+INSERT INTO registro_carga_ventas (fecha_hora, id_usuario, id_venta) VALUES
+('2024-07-01 10:15:00', 1, 1),
+('2024-07-02 11:20:00', 2, 2),
+('2024-07-03 12:25:00', 3, 3),
+('2024-07-04 13:30:00', 4, 4),
+('2024-07-05 14:35:00', 5, 5),
+('2024-07-06 15:40:00', 6, 6),
+('2024-07-07 16:45:00', 7, 7),
+('2024-07-08 17:50:00', 8, 8),
+('2024-07-09 18:55:00', 9, 9),
+('2024-07-10 19:00:00', 10, 10),
+('2024-07-11 10:05:00', 11, 11),
+('2024-07-12 11:10:00', 12, 12),
+('2024-07-13 12:15:00', 13, 13),
+('2024-07-14 13:20:00', 14, 14),
+('2024-07-15 14:25:00', 15, 15),
+('2024-07-16 15:30:00', 16, 16),
+('2024-07-17 16:35:00', 17, 17),
+('2024-07-18 17:40:00', 18, 18),
+('2024-07-19 18:45:00', 19, 19),
+('2024-07-20 19:50:00', 20, 20),
+('2024-07-21 10:55:00', 21, 21),
+('2024-07-22 11:00:00', 22, 22),
+('2024-07-23 12:05:00', 23, 23),
+('2024-07-24 13:10:00', 24, 24),
+('2024-07-25 14:15:00', 25, 25),
+('2024-07-26 15:20:00', 26, 26),
+('2024-07-27 16:25:00', 27, 27),
+('2024-07-28 17:30:00', 28, 28),
+('2024-07-29 18:35:00', 29, 29),
+('2024-07-30 19:40:00', 30, 30),
+('2024-07-31 10:45:00', 31, 31),
+('2024-08-01 11:50:00', 32, 32),
+('2024-08-02 12:55:00', 33, 33),
+('2024-08-03 14:00:00', 34, 34),
+('2024-08-04 15:05:00', 35, 35),
+('2024-08-05 16:10:00', 36, 36),
+('2024-08-06 17:15:00', 37, 37),
+('2024-08-07 18:20:00', 38, 38),
+('2024-08-08 19:25:00', 39, 39);
+
+INSERT INTO ultima_fecha_venta_empleados (id_empleado, ultima_fecha_venta) VALUES
+(1, '2024-07-01'),
+(2, '2024-07-25'),
+(3, '2024-07-26'),
+(4, '2024-07-31'),
+(6, '2024-08-08'),
+(8, '2024-08-05'),
+(9, '2024-07-13'),
+(10, '2024-07-12'),
+(11, '2024-07-15'),
+(12, '2024-08-04'),
+(13, '2024-07-07'),
+(14, '2024-07-30'),
+(15, '2024-07-05'),
+(16, '2024-08-02'),
+(17, '2024-08-07'),
+(19, '2024-07-28');
+
 DROP VIEW IF EXISTS vista_ventas_detalladas;
 
 CREATE VIEW vista_ventas_detalladas AS
@@ -221,10 +328,85 @@ JOIN
     sucursales s ON v.id_sucursal = s.id
 JOIN 
     productos p ON v.id_producto = p.id;
-    
- 
- DROP FUNCTION IF EXISTS calcular_total_ventas_sucursal;
- 
+
+DROP VIEW IF EXISTS vista_ventas_por_cliente;  
+
+CREATE VIEW vista_ventas_por_cliente AS
+SELECT 
+    c.id AS cliente_id,
+    c.nombre AS cliente_nombre,
+    c.apellido AS cliente_apellido,
+    SUM(v.total) AS total_compras,
+    COUNT(v.id) AS total_ventas
+FROM 
+    ventas v
+JOIN 
+    clientes c ON v.id_cliente = c.id
+GROUP BY 
+    c.id, c.nombre, c.apellido;
+
+DROP VIEW IF EXISTS vista_ventas_por_empleado;
+
+CREATE VIEW vista_ventas_por_empleado AS
+SELECT 
+    e.id AS empleado_id,
+    e.nombre AS empleado_nombre,
+    e.apellido AS empleado_apellido,
+    SUM(v.total) AS total_ventas,
+    COUNT(v.id) AS numero_de_ventas
+FROM 
+    ventas v
+JOIN 
+    empleados e ON v.id_empleado = e.id
+GROUP BY 
+    e.id, e.nombre, e.apellido;
+
+DROP VIEW IF EXISTS vista_ventas_por_sucursal;
+
+CREATE VIEW vista_ventas_por_sucursal AS
+SELECT 
+    s.id AS sucursal_id,
+    s.provincia AS sucursal_provincia,
+    s.direccion AS sucursal_direccion,
+    SUM(v.total) AS total_ventas,
+    COUNT(v.id) AS numero_de_ventas
+FROM 
+    ventas v
+JOIN 
+    sucursales s ON v.id_sucursal = s.id
+GROUP BY 
+    s.id, s.provincia, s.direccion;
+
+DROP VIEW IF EXISTS vista_ventas_por_producto;
+
+CREATE VIEW vista_ventas_por_producto AS
+SELECT 
+    p.id AS producto_id,
+    p.tipo AS producto_tipo,
+    p.nombre AS producto_nombre,
+    SUM(v.total) AS total_ventas,
+    COUNT(v.id) AS numero_de_ventas
+FROM 
+    ventas v
+JOIN 
+    productos p ON v.id_producto = p.id
+GROUP BY 
+    p.id, p.tipo, p.nombre;
+
+DROP VIEW IF EXISTS vista_ventas_mensuales;
+
+CREATE VIEW vista_ventas_mensuales AS
+SELECT 
+    DATE_FORMAT(v.fecha, '%Y-%m') AS mes,
+    SUM(v.total) AS total_ventas,
+    COUNT(v.id) AS numero_de_ventas
+FROM 
+    ventas v
+GROUP BY 
+    DATE_FORMAT(v.fecha, '%Y-%m');
+
+DROP FUNCTION IF EXISTS calcular_total_ventas_sucursal;
+
 DELIMITER $$
 CREATE FUNCTION calcular_total_ventas_sucursal(sucursal_id INT) RETURNS FLOAT
 DETERMINISTIC
@@ -237,7 +419,35 @@ BEGIN
 END $$
 DELIMITER ;
 
+DROP FUNCTION IF EXISTS total_ventas_empleado;
+
 DELIMITER $$
+CREATE FUNCTION total_ventas_empleado(empleado_id INT) RETURNS FLOAT
+DETERMINISTIC
+BEGIN
+    DECLARE total FLOAT;
+    SELECT SUM(total) INTO total
+    FROM ventas
+    WHERE id_empleado = empleado_id;
+    RETURN total;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS insertar_cliente;
+
+DELIMITER $$
+CREATE PROCEDURE insertar_cliente(
+    IN p_nombre VARCHAR(20),
+    IN p_apellido VARCHAR(20),
+    IN p_edad INT,
+    IN p_correo VARCHAR(30),
+    IN p_telefono VARCHAR(20)
+)
+BEGIN
+    INSERT INTO clientes (nombre, apellido, edad, correo, telefono)
+    VALUES (p_nombre, p_apellido, p_edad, p_correo, p_telefono);
+END $$
+DELIMITER ;
 
 DROP PROCEDURE IF EXISTS insertar_venta;
 
@@ -256,25 +466,113 @@ BEGIN
 END $$
 DELIMITER ;
 
-DROP TABLE IF EXISTS registro_carga_ventas;
-
-CREATE TABLE registro_carga_ventas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    fecha_hora DATETIME NOT NULL,
-    id_usuario INT NOT NULL,
-    id_venta INT NOT NULL
-);
+DROP PROCEDURE IF EXISTS insertar_nuevo_empleado;
 
 DELIMITER $$
+CREATE PROCEDURE insertar_nuevo_empleado(
+    IN p_nombre VARCHAR(20),
+    IN p_apellido VARCHAR(20),
+    IN p_edad INT,
+    IN p_correo VARCHAR(35),
+    IN p_telefono VARCHAR(25),
+    IN p_id_sucursal INT
+)
+BEGIN
+    INSERT INTO empleados (nombre, apellido, edad, correo, telefono, id_sucursal)
+    VALUES (p_nombre, p_apellido, p_edad, p_correo, p_telefono, p_id_sucursal);
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS actualizar_precio_producto;
+
+DELIMITER $$
+CREATE PROCEDURE actualizar_precio_producto(
+    IN producto_id INT,
+    IN nuevo_precio FLOAT
+)
+BEGIN
+    UPDATE productos
+    SET precio = nuevo_precio
+    WHERE id = producto_id;
+END $$
+DELIMITER ;
 
 DROP TRIGGER IF EXISTS despues_nueva_venta;
 
+DELIMITER $$
 CREATE TRIGGER despues_nueva_venta
 AFTER INSERT ON ventas
 FOR EACH ROW
 BEGIN
-    INSERT INTO registro_inserciones (fecha_hora, id_usuario, id_venta)
+    INSERT INTO registro_carga_ventas (fecha_hora, id_usuario, id_venta)
     VALUES (NOW(), (SELECT user()), NEW.id);
 END $$
-
 DELIMITER ;
+
+DROP TRIGGER IF EXISTS actualizar_stock_producto;
+
+DELIMITER $$
+CREATE TRIGGER actualizar_stock_producto
+AFTER INSERT ON ventas
+FOR EACH ROW
+BEGIN
+    UPDATE stock_productos
+    SET stock = stock - 1
+    WHERE id = NEW.id_producto;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER actualizar_fecha_ultima_venta_empleado
+AFTER INSERT ON ventas
+FOR EACH ROW
+BEGIN
+    INSERT INTO ultima_fecha_venta_empleados (id, ultima_fecha_venta)
+    VALUES (NEW.id_empleado, NEW.fecha)
+    ON DUPLICATE KEY UPDATE ultima_fecha_venta = NEW.fecha;
+END $$
+DELIMITER ;
+
+-- Codigo TCL para eliminar las ventas con id: 1, 2 y 3:
+START TRANSACTION;
+DELETE FROM registro_carga_ventas WHERE id_venta IN (1, 2, 3);
+DELETE FROM ventas WHERE id IN (1, 2, 3);
+
+-- Si se desea revertir, utilizar ROLLBACK
+-- ROLLBACK;
+
+-- Si se quieren hacer permanentes los cambios en la base de datos, usar de COMMIT en lugar de ROLLBACK
+-- COMMIT;
+
+-- Si se utilizo COMMIT y se desea re-insertar los datos, se debe eliminar los "--" y luego ejecutar el codigo.
+-- INSERT INTO sucursales (id, provincia, direccion) VALUES
+-- (1, '2024-07-01', 1, 33, 3, 1, 1100), 
+-- (2, '2024-07-02', 17, 24, 4, 9, 1300), 
+-- (3, '2024-07-03', 11, 16, 3, 20, 800);
+
+
+START TRANSACTION;
+INSERT INTO empleados (nombre, apellido, edad, correo, telefono, id_sucursal) VALUES 
+('Juan', 'Pérez', 30, 'juan-perez7@example.com', '3794765891', 1),
+('Ana', 'García', 25, 'ana_garcia@example.com', '37948719521', 2),
+('Carlos', 'López', 40, 'carlos.lopez@example.com', '3795669784', 3),
+('María', 'González', 35, 'maria.g92@example.com', '3794635894', 1);
+
+SAVEPOINT after_record_4;
+
+INSERT INTO empleados (nombre, apellido, edad, correo, telefono, id_sucursal) VALUES 
+('Luis', 'Martínez', 28, 'luis.ma01@example.com', '3794881852', 2),
+('Laura', 'Fernández', 32, 'laura-fernandez1@example.com', '3795716385', 3),
+('José', 'Rodríguez', 45, 'jose.r79@example.com', '3794339981', 1),
+('Carmen', 'Sánchez', 22, 'carmen.sanchez@example.com', '3795009478', 2);
+
+SAVEPOINT after_record_8;
+
+-- Si algo salio mal y se desea dezhaser los cambios después del primer savepoint
+-- ROLLBACK TO after_record_4;
+
+-- Si se desea revertir todo, reemplazar ROLLBACK TO after_record_4 por
+-- ROLLBACK;
+
+-- Si la transacción está bien, reemplazar ROLLBACK TO after_record_4 por
+-- COMMIT;
